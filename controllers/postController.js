@@ -88,5 +88,44 @@ const deletePost = async (req, res) => {
     });
   }
 };
+const updatePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description } = req.body;
+    const post = await postModel.findById({ _id: id });
+    if (!title || !description) {
+      res.status(200).send({
+        success: true,
+        message: "Please provide post title or description",
+      });
+    }
+    const updatedPost = await postModel.findByIdAndUpdate(
+      { _id: id },
+      {
+        title: title || post?.title,
+        description: description || post?.description,
+      },
+      { new: true }
+    );
+    res.status(200).send({
+      success: true,
+      message: "Post Update Successfully",
+      updatedPost,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Error is update post Api",
+      error,
+    });
+  }
+};
 
-module.exports = { createPost, getAllPost, getUserPost, deletePost };
+module.exports = {
+  createPost,
+  getAllPost,
+  getUserPost,
+  deletePost,
+  updatePost,
+};
