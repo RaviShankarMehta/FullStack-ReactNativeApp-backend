@@ -31,5 +31,25 @@ const createPost = async (req, res) => {
     });
   }
 };
+const getAllPost = async (req, res) => {
+  try {
+    let post = await postModel
+      .find({})
+      .populate("postedBy", "_id name")
+      .sort({ createdAt: -1 });
+    res.status(200).send({
+      success: true,
+      message: "All Post Data",
+      post,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Error is get All post Api",
+      error,
+    });
+  }
+};
 
-module.exports = { createPost };
+module.exports = { createPost, getAllPost };
