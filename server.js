@@ -18,6 +18,13 @@ const post = require("./routes/postRoutes");
 app.use("/api/v1/auth", route);
 app.use("/api/v1/post", post);
 
+app.get("/", (req, res) => {
+  res.status(200).send({
+    success: true,
+    message: "node server running",
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
