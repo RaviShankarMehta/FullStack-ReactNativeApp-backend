@@ -1,6 +1,14 @@
 const { hashPassword, comparePassword } = require("../helpers/authHelper");
 const userModel = require("../models/userModel");
 const JWT = require("jsonwebtoken");
+const { expressjwt: jwt } = require("express-jwt");
+
+// middleware
+const requireSignIn = jwt({
+  secret: process.env.JWT_SECRET,
+  algorithms: ["HS256"],
+});
+
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -86,6 +94,7 @@ const update = async (req, res) => {
     });
   }
 };
+
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -115,6 +124,7 @@ const login = async (req, res) => {
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
+
     user.password = undefined;
 
     res.status(200).send({
@@ -133,4 +143,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login, update };
+module.exports = { register, login, update, requireSignIn };
