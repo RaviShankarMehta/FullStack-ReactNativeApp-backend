@@ -71,5 +71,22 @@ const getUserPost = async (req, res) => {
     });
   }
 };
+const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await postModel.findByIdAndDelete({ _id: id });
+    res.status(200).send({
+      success: true,
+      message: "Post Deleted Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: "Error is delete post Api",
+      error,
+    });
+  }
+};
 
-module.exports = { createPost, getAllPost, getUserPost };
+module.exports = { createPost, getAllPost, getUserPost, deletePost };
